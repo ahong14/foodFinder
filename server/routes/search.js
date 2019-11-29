@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
     //make external request to yelp api
     request.get(requestOptions, (err, resp, body) => {
         if(err) {
-            console.log(err);
+            console.error(err);
             return res.status(500).json({
                 success: false,
                 message: "Error with API request"
