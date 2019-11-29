@@ -1,3 +1,9 @@
+@import "../../variables";
+
+.jumbotronContainer{
+    width: 100%;
+}
+
 .searchIconContainer{
     display: flex;
     justify-content: flex-start;
@@ -7,4 +13,16 @@
 .searchIcon{
     cursor: pointer;
     align-self: center;
+}
+
+.searchResultsContainer{
+    padding-top: 20px;
+}
+
+.jumbotron{
+    color: $jumbotron-background;
+}
+
+.jumbotron > *{
+    color: $jumbotron-text;
 }
