@@ -4,16 +4,35 @@
     .jumbotronContainer{
         width: 100%;
     }
+
+    .currentLocationContainer{
+        height: 100%;
+        display: flex;
+    }
     
     .searchIconContainer{
         display: flex;
         justify-content: flex-start;
         height: 100%;
     }
+
+    .currentLocation{
+        display: flex;
+        align-self: center;
+    }
     
     .searchIcon{
         cursor: pointer;
         align-self: center;
+    }
+
+    .searchLoadingContainer{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        height: 100%;
+        padding-left: 10px;
     }
     
     .searchResultsContainer{

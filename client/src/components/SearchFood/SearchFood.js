@@ -5,7 +5,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Form from 'react-bootstrap/Form';
+import Spinner from 'react-bootstrap/Spinner';
 import { FaSearch } from 'react-icons/fa';
+import { MdMyLocation } from 'react-icons/md';
 import axios from 'axios';
 import cities from 'cities.json';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
@@ -17,11 +19,18 @@ class SearchFood extends Component{
         this.state = {
             searchQuery: "",
             locationQuery: "",
-            searchPlaceholder: "Search food, restaurants, businesses, etc.",
+            searchPlaceholder: "Search restaurants, businesses, etc.",
             locationPlaceHolder: "Enter Location",
             searchLimit: 12,
             citiesSuggestionsUs: [],
-            searchResults: []
+            searchResults: [],
+            searchLocationDisabled: false,
+            currentLocationEnabled: false,
+            currentLocation: {
+                latitude: 0,
+                longitude: 0
+            },
+            spinnerVisible: 'hidden'
         }
     }
 
@@ -45,15 +54,55 @@ class SearchFood extends Component{
         event.length === 1 ? this.setState({locationQuery: event[0].name}) : this.setState({locationQuery: ''});
     }
 
+    //function to get latitude, longitude of current location
+    getCurrentLocation = () => {
+        //https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
+        let location = {...this.state.currentLocation};
+        navigator.geolocation.getCurrentPosition( (pos) => {
+            location.latitude = pos.coords.latitude;
+            location.longitude = pos.coords.longitude;
+            this.setState({
+                currentLocation: location
+            })
+        })
+    }
+
+    //toggle between enabling current location, disabling location search, etc. 
+    handleCurrentLocation = (event) => {
+        this.setState({
+            currentLocationEnabled: !this.state.currentLocationEnabled,
+            searchLocationDisabled: !this.state.searchLocationDisabled
+        });
+
+        if(event.target.value === "on"){
+            this.getCurrentLocation();
+        }
+    }
+
     //make request to api based on search queries
     sendQuery = () => {
-        if(this.state.searchQuery !== ''){
+        if(this.state.searchQuery !== ""){
+            this.setState({
+                spinnerVisible: "visible"
+            });
+            //construct search params based on whether current location enabled on/off
+            let searchParams = {};
+            //if current location, use latitude, longitude
+            if(this.state.currentLocationEnabled){
+                searchParams.term = this.state.searchQuery;
+                searchParams.limit = this.state.searchLimit;
+                searchParams.latitude = this.state.currentLocation.latitude;
+                searchParams.longitude = this.state.currentLocation.longitude;
+            }
+            //else use location search query
+            else{
+                searchParams.term = this.state.searchQuery;
+                searchParams.limit = this.state.searchLimit;
+                searchParams.location = this.state.locationQuery;
+            }
+
             axios.get("/api/search",{
-                params: {
-                    term: this.state.searchQuery,
-                    location: this.state.locationQuery,
-                    limit: this.state.searchLimit
-                }
+                params: searchParams
             })
             .then(res => {
                 if(res.data.success === true){
@@ -62,13 +111,15 @@ class SearchFood extends Component{
                     //determine if results returned from api
                     if(searchData.businesses !== undefined){
                         this.setState({
-                            searchResults: searchData.businesses
+                            searchResults: searchData.businesses,
+                            spinnerVisible: "hidden"
                         });
                     }
 
                     else{
                         this.setState({
-                            searchResults: []
+                            searchResults: [],
+                            spinnerVisible: "hidden"
                         })
                     }
                 }
@@ -138,11 +189,11 @@ class SearchFood extends Component{
                     </Row>
 
                     <Row>
-                        <Col md="6">
+                        <Col md="4">
                             <Form.Control onChange={this.handleSearchChange} onKeyPress={this.searchEnter} size="lg" type="text" placeholder={this.state.searchPlaceholder}/>
                         </Col>
 
-                        <Col md="4">
+                        <Col md="3">
                             <AsyncTypeahead 
                                 labelKey={option => option.name}
                                 options={this.state.citiesSuggestionsUs}
@@ -153,12 +204,33 @@ class SearchFood extends Component{
                                 onSearch={this.handleLocationChange}
                                 onChange={this.selectedChange}
                                 onKeyDown={this.searchEnter}
+                                disabled={this.state.searchLocationDisabled}
                             />
+                        </Col>
+
+                        <Col md="3">
+                            <div className="currentLocationContainer">
+                                <Form.Check inline type="checkbox">
+                                    <Form.Check.Input type={"checkbox"} onChange={this.handleCurrentLocation}/>
+                                    <Form.Check.Label>
+                                        Use Current Location <MdMyLocation/>
+                                    </Form.Check.Label>
+                                </Form.Check>
+                            </div>
                         </Col>
 
                         <Col md="2">
                             <div className="searchIconContainer" onClick={this.sendQuery}>
                                 <FaSearch className="searchIcon"/>
+                                <div className="searchLoadingContainer" style={{visibility: this.state.spinnerVisible}}>
+                                    <Spinner
+                                        as="span"
+                                        animation="border"
+                                        size="sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                    />
+                                </div>
                             </div>
                         </Col>
                     </Row>
