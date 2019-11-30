@@ -19,7 +19,7 @@ class SearchFood extends Component{
             locationQuery: "",
             searchPlaceholder: "Search food, restaurants, businesses, etc.",
             locationPlaceHolder: "Enter Location",
-            searchLimit: 10,
+            searchLimit: 12,
             citiesSuggestionsUs: [],
             searchResults: []
         }
@@ -59,12 +59,22 @@ class SearchFood extends Component{
                 if(res.data.success === true){
                     let searchData = res.data.body;
                     searchData = JSON.parse(res.data.body);
-                    this.setState({
-                        searchResults: searchData.businesses
-                    })
+                    //determine if results returned from api
+                    if(searchData.businesses !== undefined){
+                        this.setState({
+                            searchResults: searchData.businesses
+                        });
+                    }
+
+                    else{
+                        this.setState({
+                            searchResults: []
+                        })
+                    }
                 }
             })
             .catch(err => {
+                console.log(err);
                 alert(err);
             })
         }
@@ -98,7 +108,16 @@ class SearchFood extends Component{
         const results = this.state.searchResults.map( result => {
             return(
                 <Col sm="4">
-                    <SearchResult key={result.id} businessName={result.name} image={result.image_url} yelpURL={result.url}/>
+                    <SearchResult 
+                        key={result.id} 
+                        businessName={result.name} 
+                        phone={result.display_phone} 
+                        image={result.image_url} 
+                        yelpURL={result.url}
+                        address={result.location.display_address[0] + ' '  + result.location.display_address[1]}
+                        price={result.price}
+                        rating={result.rating}
+                    />
                 </Col>
             );
         })
@@ -149,7 +168,7 @@ class SearchFood extends Component{
                             { results }
                         </Row>  
                     </div>
-                    
+
                 </Container>
             </div>
         );
