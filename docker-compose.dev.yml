@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes: 
+      - ./server:/app/src/server
+    ports:
+      - "4000:4000"
+    container_name: server
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client:/app/src/client
+      - /app/src/client/node_modules
+    ports:
+      - "3000:3000"
+    container_name: client
+    restart: unless-stopped
+    depends_on:
+      - server
