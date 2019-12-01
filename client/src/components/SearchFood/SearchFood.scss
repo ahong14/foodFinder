@@ -37,6 +37,8 @@
     
     .searchResultsContainer{
         padding-top: 20px;
+        height: 550px;
+        overflow: auto;
     }
     
     .jumbotron{
@@ -46,7 +48,12 @@
     .jumbotron > *{
         color: $jumbotron-text;
     }
-    // .active{
-    //     background-color: $activePaginationBackground;
-    // }
+
+    .active{
+        border: solid 1px $activePaginationBackground;
+    }
+
+    .page-item{
+        padding: 5px;
+    }
 }
