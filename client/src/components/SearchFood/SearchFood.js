@@ -24,6 +24,7 @@ class SearchFood extends Component{
             searchPlaceholder: "Search restaurants, businesses, etc.",
             locationPlaceHolder: "Enter Location",
             searchLimit: 48,
+            resultsPerPage: 12,
             citiesSuggestionsUs: [],
             searchResults: [],
             searchLocationDisabled: false,
@@ -86,8 +87,12 @@ class SearchFood extends Component{
 
     //function to handle different pagination selection
     handlePaginationChange = (page) => {
+        let maxPaginationIndex = Number(page) * this.state.resultsPerPage;
+        let startingPaginationIndex = maxPaginationIndex - this.state.resultsPerPage;
+        let paginatedValues = this.state.searchResults.slice(startingPaginationIndex, maxPaginationIndex);
         this.setState({
-            activePage: page
+            activePage: page,
+            searchResultsPaginated: paginatedValues
         })
     }
 
@@ -268,18 +273,13 @@ class SearchFood extends Component{
                     </div>
 
                     <div>
-                        {/* <Pagination> 
-                            {this.state.paginationItems}
-                        </Pagination> */}
                         <Pagination
-                            className="pagination"
                             activePage={this.state.activePage}
                             totalItemsCount={this.state.searchLimit}
                             pageRangeDisplayed={4}
                             onChange={this.handlePaginationChange}
                             itemsCountPerPage={12}
                             hideDisabled
-                            itemClass="page-item"
                         />
                     </div>
                 </Container>
