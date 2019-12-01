@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './SearchResult.scss';
 import Card from 'react-bootstrap/Card';
+import PropTypes from 'prop-types';
 
 class SearchResult extends Component{
     constructor(props){
@@ -60,6 +61,15 @@ class SearchResult extends Component{
             </Card>
         );
     }
+}
+
+SearchResult.propTypes = {
+    businessName: PropTypes.string.isRequired,
+    phone: PropTypes.string,
+    address: PropTypes.string,
+    price: PropTypes.string,
+    rating: PropTypes.string,
+    yelpURL: PropTypes.string
 }
 
 export default SearchResult;

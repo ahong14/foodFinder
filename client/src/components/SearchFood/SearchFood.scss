@@ -1,4 +1,5 @@
 @import "../../variables";
+@import 'bootstrap';
 
 @media screen and (max-width: 1440px){
     .jumbotronContainer{
@@ -46,4 +47,8 @@
     .jumbotron > *{
         color: $jumbotron-text;
     }
+
+    // .active{
+    //     background-color: $activePaginationBackground;
+    // }
 }

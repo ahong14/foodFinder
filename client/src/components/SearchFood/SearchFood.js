@@ -6,12 +6,14 @@ import Col from 'react-bootstrap/Col';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
+// import Pagination from 'react-bootstrap/Pagination';
 import { FaSearch } from 'react-icons/fa';
 import { MdMyLocation } from 'react-icons/md';
 import axios from 'axios';
 import cities from 'cities.json';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import SearchResult from '../SearchResult/SearchResult';
+import Pagination from 'react-js-pagination';
 
 class SearchFood extends Component{
     constructor(props){
@@ -21,7 +23,7 @@ class SearchFood extends Component{
             locationQuery: "",
             searchPlaceholder: "Search restaurants, businesses, etc.",
             locationPlaceHolder: "Enter Location",
-            searchLimit: 12,
+            searchLimit: 48,
             citiesSuggestionsUs: [],
             searchResults: [],
             searchLocationDisabled: false,
@@ -30,7 +32,10 @@ class SearchFood extends Component{
                 latitude: 0,
                 longitude: 0
             },
-            spinnerVisible: 'hidden'
+            spinnerVisible: 'hidden',
+            paginationItems: [],
+            searchResultsPaginated:[],
+            activePage: 1
         }
     }
 
@@ -79,6 +84,13 @@ class SearchFood extends Component{
         }
     }
 
+    //function to handle different pagination selection
+    handlePaginationChange = (page) => {
+        this.setState({
+            activePage: page
+        })
+    }
+
     //make request to api based on search queries
     sendQuery = () => {
         if(this.state.searchQuery !== ""){
@@ -110,9 +122,23 @@ class SearchFood extends Component{
                     searchData = JSON.parse(res.data.body);
                     //determine if results returned from api
                     if(searchData.businesses !== undefined){
+                        let initialSearchResults = [];
+                        for(let i = 0; i < 12; i++){
+                            initialSearchResults.push(searchData.businesses[i]);
+                        }
+                        let paginationArray = [];
+                        for(let i = 1; i <= 5; i++){
+                            paginationArray.push(
+                                <Pagination.Item onClick={this.handlePaginationChange} key={i} active={i === this.state.activePage}>
+                                    {i}
+                                </Pagination.Item>
+                            );
+                        }
                         this.setState({
                             searchResults: searchData.businesses,
-                            spinnerVisible: "hidden"
+                            spinnerVisible: "hidden",
+                            searchResultsPaginated: initialSearchResults,
+                            paginationItems: paginationArray
                         });
                     }
 
@@ -156,7 +182,7 @@ class SearchFood extends Component{
     }
 
     render(){
-        const results = this.state.searchResults.map( result => {
+        const results = this.state.searchResultsPaginated.map( result => {
             return(
                 <Col sm="4">
                     <SearchResult 
@@ -241,6 +267,21 @@ class SearchFood extends Component{
                         </Row>  
                     </div>
 
+                    <div>
+                        {/* <Pagination> 
+                            {this.state.paginationItems}
+                        </Pagination> */}
+                        <Pagination
+                            className="pagination"
+                            activePage={this.state.activePage}
+                            totalItemsCount={this.state.searchLimit}
+                            pageRangeDisplayed={4}
+                            onChange={this.handlePaginationChange}
+                            itemsCountPerPage={12}
+                            hideDisabled
+                            itemClass="page-item"
+                        />
+                    </div>
                 </Container>
             </div>
         );
