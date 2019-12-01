@@ -6,7 +6,6 @@ import Col from 'react-bootstrap/Col';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
-// import Pagination from 'react-bootstrap/Pagination';
 import { FaSearch } from 'react-icons/fa';
 import { MdMyLocation } from 'react-icons/md';
 import axios from 'axios';
@@ -24,6 +23,7 @@ class SearchFood extends Component{
             searchPlaceholder: "Search restaurants, businesses, etc.",
             locationPlaceHolder: "Enter Location",
             searchLimit: 48,
+            resultsPerPage: 12,
             citiesSuggestionsUs: [],
             searchResults: [],
             searchLocationDisabled: false,
@@ -35,7 +35,8 @@ class SearchFood extends Component{
             spinnerVisible: 'hidden',
             paginationItems: [],
             searchResultsPaginated:[],
-            activePage: 1
+            activePage: 1,
+            togglePagination: "hidden"
         }
     }
 
@@ -86,8 +87,12 @@ class SearchFood extends Component{
 
     //function to handle different pagination selection
     handlePaginationChange = (page) => {
+        let maxPaginationIndex = Number(page) * this.state.resultsPerPage;
+        let startingPaginationIndex = maxPaginationIndex - this.state.resultsPerPage;
+        let paginatedValues = this.state.searchResults.slice(startingPaginationIndex, maxPaginationIndex);
         this.setState({
-            activePage: page
+            activePage: page,
+            searchResultsPaginated: paginatedValues
         })
     }
 
@@ -123,29 +128,22 @@ class SearchFood extends Component{
                     //determine if results returned from api
                     if(searchData.businesses !== undefined){
                         let initialSearchResults = [];
-                        for(let i = 0; i < 12; i++){
+                        for(let i = 0; i < this.state.resultsPerPage; i++){
                             initialSearchResults.push(searchData.businesses[i]);
-                        }
-                        let paginationArray = [];
-                        for(let i = 1; i <= 5; i++){
-                            paginationArray.push(
-                                <Pagination.Item onClick={this.handlePaginationChange} key={i} active={i === this.state.activePage}>
-                                    {i}
-                                </Pagination.Item>
-                            );
                         }
                         this.setState({
                             searchResults: searchData.businesses,
                             spinnerVisible: "hidden",
                             searchResultsPaginated: initialSearchResults,
-                            paginationItems: paginationArray
+                            togglePagination: "visible"
                         });
                     }
 
                     else{
                         this.setState({
                             searchResults: [],
-                            spinnerVisible: "hidden"
+                            spinnerVisible: "hidden",
+                            togglePagination: "hidden"
                         })
                     }
                 }
@@ -199,7 +197,7 @@ class SearchFood extends Component{
             );
         })
         return(
-            <div>
+            <div onKeyPress={this.searchEnter}>
                 <Container>
                     <Row>
                         <Col>
@@ -267,12 +265,8 @@ class SearchFood extends Component{
                         </Row>  
                     </div>
 
-                    <div>
-                        {/* <Pagination> 
-                            {this.state.paginationItems}
-                        </Pagination> */}
+                    <div className="paginationContainer" style={{visibility: this.state.togglePagination}}>
                         <Pagination
-                            className="pagination"
                             activePage={this.state.activePage}
                             totalItemsCount={this.state.searchLimit}
                             pageRangeDisplayed={4}
@@ -280,6 +274,7 @@ class SearchFood extends Component{
                             itemsCountPerPage={12}
                             hideDisabled
                             itemClass="page-item"
+                            hideNavigation={true}
                         />
                     </div>
                 </Container>

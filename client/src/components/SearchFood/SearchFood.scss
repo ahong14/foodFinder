@@ -1,7 +1,6 @@
 @import "../../variables";
-@import 'bootstrap';
 
-@media screen and (max-width: 1440px){
+@media screen and (max-width: 1440px){        
     .jumbotronContainer{
         width: 100%;
     }
@@ -38,6 +37,8 @@
     
     .searchResultsContainer{
         padding-top: 20px;
+        height: 550px;
+        overflow: auto;
     }
     
     .jumbotron{
@@ -48,7 +49,11 @@
         color: $jumbotron-text;
     }
 
-    // .active{
-    //     background-color: $activePaginationBackground;
-    // }
+    .active{
+        border: solid 1px $activePaginationBackground;
+    }
+
+    .page-item{
+        padding: 5px;
+    }
 }
