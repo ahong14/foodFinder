@@ -4,4 +4,4 @@ start-dev:
 		docker-compose -f docker-compose.dev.yml up -d --build
 #stop containers in dev environment
 stop-dev:
-		docker-compose -f docker-compose.dev.yml downß
+		docker-compose -f docker-compose.dev.yml down
