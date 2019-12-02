@@ -13,6 +13,8 @@ import cities from 'cities.json';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import SearchResult from '../SearchResult/SearchResult';
 import Pagination from 'react-js-pagination';
+import Dropdown from 'react-bootstrap/Dropdown';
+import SplitButton from 'react-bootstrap/SplitButton';
 
 class SearchFood extends Component{
     constructor(props){
@@ -24,6 +26,7 @@ class SearchFood extends Component{
             locationPlaceHolder: "Enter Location",
             searchLimit: 48,
             resultsPerPage: 12,
+            //state values regarding location
             citiesSuggestionsUs: [],
             searchResults: [],
             searchLocationDisabled: false,
@@ -32,12 +35,20 @@ class SearchFood extends Component{
                 latitude: 0,
                 longitude: 0
             },
-            spinnerVisible: 'hidden',
+            spinnerVisible: "hidden",
+            //state values regarding paginations
             paginationItems: [],
             searchResultsPaginated:[],
             activePage: 1,
-            togglePagination: "hidden"
+            togglePagination: "hidden",
+            //state values regarding filters
+            showFilters: "hidden",
+            selectedFilter: 0,
+            filters: ["Price $ (Lowest to Highest)", "Price $ (Highest to Lowest)", "Rating (Highest to Lowest)", "Rating (Lowest to Highest)"],
+            activeFilters: []
         }
+        //create react refs
+        this.priceLowToHighRef = React.createRef();
     }
 
     //function to handle input change on searchbar
@@ -45,6 +56,21 @@ class SearchFood extends Component{
         this.setState({
             searchQuery: event.target.value
         })
+    }
+    
+    //handle selected filter
+    handleSelectedFilter = (event) => {
+        let eventKeySelected = Number(event) - 1;
+        let activeFilterArray = [];
+        for(let i = 0; i < this.state.activeFilters.length; i++){
+            activeFilterArray.push(false);
+        }
+
+        activeFilterArray[eventKeySelected] = true;
+        this.setState({
+            selectedFilter: Number(event),
+            activeFilters: activeFilterArray
+        });
     }
 
     //function to handle input change on location search
@@ -135,7 +161,8 @@ class SearchFood extends Component{
                             searchResults: searchData.businesses,
                             spinnerVisible: "hidden",
                             searchResultsPaginated: initialSearchResults,
-                            togglePagination: "visible"
+                            togglePagination: "visible",
+                            showFilters: "visible"
                         });
                     }
 
@@ -179,6 +206,17 @@ class SearchFood extends Component{
         });
     }
 
+    componentDidMount(){
+        let setupFiltersBooleans = [];
+        for(let i = 0; i < this.state.filters; i++){
+            setupFiltersBooleans.push(false);
+        }
+
+        this.setState({
+            activeFilters: setupFiltersBooleans
+        });
+    }
+
     render(){
         const results = this.state.searchResultsPaginated.map( result => {
             return(
@@ -195,6 +233,17 @@ class SearchFood extends Component{
                     />
                 </Col>
             );
+        })
+
+        const dropdownItems = this.state.filters.map( (filter, index) => {
+            return(
+                <Dropdown.Item 
+                    eventKey={index + 1} 
+                    onSelect={this.handleSelectedFilter} 
+                > 
+                    { filter } 
+                </Dropdown.Item>
+            )
         })
         return(
             <div onKeyPress={this.searchEnter}>
@@ -259,6 +308,17 @@ class SearchFood extends Component{
                         </Col>
                     </Row>
 
+                    <div className="filterResultsContainer" style={{visibility: this.state.showFilters}}>
+                        <Row>
+                            <SplitButton variant="secondary" title="Filter By" size="small">
+                                <Dropdown.Item eventKey="1" onSelect={this.handleSelectedFilter} active={this.state.activeFilters[0]}> Price $ (Lowest to Highest) </Dropdown.Item>
+                                <Dropdown.Item eventKey="2" onSelect={this.handleSelectedFilter} active={this.state.activeFilters[1]}> Price $ (Highest to Lowest) </Dropdown.Item>
+                                <Dropdown.Item eventKey="3" onSelect={this.handleSelectedFilter} active={this.state.activeFilters[2]}> Rating (Lowest to Highest) </Dropdown.Item>
+                                <Dropdown.Item eventKey="4" onSelect={this.handleSelectedFilter} active={this.state.activeFilters[3]}> Rating (Highest to Lowest) </Dropdown.Item>
+                            </SplitButton>
+                        </Row>
+                    </div>
+                    
                     <div className="searchResultsContainer">
                         <Row>
                             { results }
