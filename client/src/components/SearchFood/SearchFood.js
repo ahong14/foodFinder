@@ -20,6 +20,7 @@ class SearchFood extends Component{
     constructor(props){
         super(props);
         this.state = {
+            //state values regarding search queries
             searchQuery: "",
             locationQuery: "",
             searchPlaceholder: "Search restaurants, businesses, etc.",
@@ -45,11 +46,12 @@ class SearchFood extends Component{
             //state values regarding filters
             showFilters: "hidden",
             selectedFilter: 0,
-            filters: ["Price $ (Lowest to Highest)", "Price $ (Highest to Lowest)", "Rating (Highest to Lowest)", "Rating (Lowest to Highest)"],
+            filters: ["Price $ (Lowest to Highest)", "Price $ (Highest to Lowest)", "Rating (Lowest to Highest)", "Rating (Highest to Lowest)"],
             activeFilters: []
         }
         //create react refs
         this.priceLowToHighRef = React.createRef();
+        this.currentLocationRef = React.createRef();
     }
 
     //function to handle input change on searchbar
@@ -74,18 +76,41 @@ class SearchFood extends Component{
         }, () => {
             //create copy of search results, create filtered results
             let filterValues = [...this.state.searchResults];
+            let filterNoPrice = [];
+            let filterWithPrice = [];
+            console.log(filterValues);
             switch(this.state.selectedFilter){
                 //price low to high
                 case 1:
-                    filterValues = filterValues.sort((a,b) => {
-                        return a.price < b.price === true ?  1 : -1;
+                    filterNoPrice = filterValues.filter(value => {
+                        return value.price === undefined;
                     });
+
+                    filterWithPrice = filterValues.filter(value => {
+                        return value.price;
+                    });
+
+                    filterWithPrice = filterWithPrice.sort((a,b) => {
+                        return String(a.price).length - String(b.price).length;
+                    });
+
+                    filterValues = [...filterWithPrice, ...filterNoPrice];
                     break;
                 //price high to low
                 case 2:
-                    filterValues = filterValues.sort((a,b) => {
-                        return a.price < b.price === true ?  1 : -1;
+                    filterNoPrice = filterValues.filter(value => {
+                        return value.price === undefined;
                     });
+
+                    filterWithPrice = filterValues.filter(value => {
+                        return value.price;
+                    });
+
+                    filterWithPrice = filterWithPrice.sort((a,b) => {
+                        return String(b.price).length - String(a.price).length;
+                    });
+
+                    filterValues = [...filterWithPrice, ...filterNoPrice];
                     break;
                 //rating low to high
                 case 3:
@@ -282,13 +307,14 @@ class SearchFood extends Component{
                 <Dropdown.Item 
                     eventKey={index + 1} 
                     onSelect={this.handleSelectedFilter} 
+                    active={index +1 === this.state.selectedFilter}
                 > 
                     { filter } 
                 </Dropdown.Item>
             )
         })
         return(
-            <div onKeyPress={this.searchEnter}>
+            <div>
                 <Container>
                     <Row>
                         <Col>
@@ -326,7 +352,7 @@ class SearchFood extends Component{
                         <Col md="3">
                             <div className="currentLocationContainer">
                                 <Form.Check inline type="checkbox">
-                                    <Form.Check.Input type={"checkbox"} onChange={this.handleCurrentLocation}/>
+                                    <Form.Check.Input ref={this.currentLocationRef} type={"checkbox"} onChange={this.handleCurrentLocation}/>
                                     <Form.Check.Label>
                                         Use Current Location <MdMyLocation/>
                                     </Form.Check.Label>
@@ -353,10 +379,8 @@ class SearchFood extends Component{
                     <div className="filterResultsContainer" style={{visibility: this.state.showFilters}}>
                         <Row>
                             <SplitButton variant="secondary" title="Filter By" size="small">
-                                <Dropdown.Item eventKey="1" onSelect={this.handleSelectedFilter} active={this.state.activeFilters[0]}> Price $ (Lowest to Highest) </Dropdown.Item>
-                                <Dropdown.Item eventKey="2" onSelect={this.handleSelectedFilter} active={this.state.activeFilters[1]}> Price $ (Highest to Lowest) </Dropdown.Item>
-                                <Dropdown.Item eventKey="3" onSelect={this.handleSelectedFilter} active={this.state.activeFilters[2]}> Rating (Lowest to Highest) </Dropdown.Item>
-                                <Dropdown.Item eventKey="4" onSelect={this.handleSelectedFilter} active={this.state.activeFilters[3]}> Rating (Highest to Lowest) </Dropdown.Item>
+                                { dropdownItems }
+  
                             </SplitButton>
                         </Row>
                     </div>
