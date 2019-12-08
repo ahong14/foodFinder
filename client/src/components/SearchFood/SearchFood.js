@@ -29,6 +29,7 @@ class SearchFood extends Component{
             //state values regarding location
             citiesSuggestionsUs: [],
             searchResults: [],
+            filteredResults: [],
             searchLocationDisabled: false,
             currentLocationEnabled: false,
             currentLocation: {
@@ -60,16 +61,61 @@ class SearchFood extends Component{
     
     //handle selected filter
     handleSelectedFilter = (event) => {
+        //map filters to number key selected
         let eventKeySelected = Number(event) - 1;
         let activeFilterArray = [];
-        for(let i = 0; i < this.state.activeFilters.length; i++){
-            activeFilterArray.push(false);
-        }
-
+        activeFilterArray = [...this.state.activeFilters];
+ 
+        //map selected key to true, states filter is applied
         activeFilterArray[eventKeySelected] = true;
         this.setState({
             selectedFilter: Number(event),
             activeFilters: activeFilterArray
+        }, () => {
+            //create copy of search results, create filtered results
+            let filterValues = [...this.state.searchResults];
+            switch(this.state.selectedFilter){
+                //price low to high
+                case 1:
+                    filterValues = filterValues.sort((a,b) => {
+                        return a.price < b.price === true ?  1 : -1;
+                    });
+                    break;
+                //price high to low
+                case 2:
+                    filterValues = filterValues.sort((a,b) => {
+                        return a.price < b.price === true ?  1 : -1;
+                    });
+                    break;
+                //rating low to high
+                case 3:
+                    filterValues.sort((a,b) => {
+                        return a.rating - b.rating;
+                    });
+                    break;
+                //rating high to low
+                case 4:
+                    filterValues.sort((a,b) => {
+                        return b.rating - a.rating;
+                    });
+                    break;
+                default:
+                    break;
+            }
+
+            //create initial values to display based on fitered results
+            let initialSearchResults = [];
+            for(let i = 0; i < this.state.resultsPerPage; i++){
+                initialSearchResults.push(filterValues[i]);
+            }
+
+            //update state
+            this.setState({
+                filteredResults: filterValues,
+                searchResults: filterValues,
+                activePage: 1,
+                searchResultsPaginated: initialSearchResults
+            });
         });
     }
 
@@ -194,26 +240,22 @@ class SearchFood extends Component{
         }
     }
 
-
-    //filter us cities from json file
+    //when component mounts, setup cities json and active filters array
     componentDidMount(){
+        //extract only us cities from json
         let usCities= cities.filter( city => {
             return city.country === "US";
         });
 
-        this.setState({
-            citiesSuggestionsUs: usCities
-        });
-    }
-
-    componentDidMount(){
+        //setup active filters selected
         let setupFiltersBooleans = [];
         for(let i = 0; i < this.state.filters; i++){
             setupFiltersBooleans.push(false);
         }
 
         this.setState({
-            activeFilters: setupFiltersBooleans
+            activeFilters: setupFiltersBooleans,
+            citiesSuggestionsUs: usCities
         });
     }
 
