@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  #nodejs app serving react application
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./client:/app/src/client
+      - /app/src/client/node_modules
+    container_name: server
+    restart: unless-stopped
+
+  #nginx web server
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    container_name: nginx
+    restart: unless-stopped
+  

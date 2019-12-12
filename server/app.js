@@ -15,12 +15,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 //debug requests
 app.use(morgan('combined'));
+//serve index.html for react
+app.use(express.static(path.join(__dirname, '/../client/build')));
+
 
 //route setup
 const search = require('./routes/search');
 app.use('/api/search', search);
-app.get('/', (req, res) => {
-    return res.status(200).send("test");
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../client/build/index.html'))
 })
 
 const PORT = 4000;
