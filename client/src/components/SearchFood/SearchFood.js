@@ -15,6 +15,8 @@ import SearchResult from '../SearchResult/SearchResult';
 import Pagination from 'react-js-pagination';
 import Dropdown from 'react-bootstrap/Dropdown';
 import SplitButton from 'react-bootstrap/SplitButton';
+import * as Scroll from 'react-scroll';
+
 
 class SearchFood extends Component{
     constructor(props){
