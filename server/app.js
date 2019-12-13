@@ -21,7 +21,10 @@ app.use(express.static(path.join(__dirname, '/../client/build')));
 
 //route setup
 const search = require('./routes/search');
+const auth = require('./routes/auth');
+
 app.use('/api/search', search);
+app.use('/api/auth', auth);
 app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname + '/../client/build/index.html'))
 })

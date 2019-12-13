@@ -9,6 +9,11 @@ import Button from 'react-bootstrap/Button';
 class Signup extends Component{
     constructor(props){
         super(props);
+        this.state = {
+            email: "",
+            password: "",
+            confirmPassword: ""
+        }
     }
 
     render(){
@@ -22,17 +27,17 @@ class Signup extends Component{
                                 <Form>
                                     <Form.Group>
                                         <Form.Label> Email </Form.Label>
-                                        <Form.Control type="email"/>
+                                        <Form.Control onChange={(event) => this.setState({email: event.target.value})} type="email"/>
                                     </Form.Group>
 
                                     <Form.Group>
                                         <Form.Label> Password </Form.Label>
-                                        <Form.Control type="password"/>
+                                        <Form.Control onChange={(event) => this.setState({password: event.target.value})} type="password"/>
                                     </Form.Group>
 
                                     <Form.Group>
                                         <Form.Label> Confirm Password </Form.Label>
-                                        <Form.Control type="password"/>
+                                        <Form.Control onChange={(event) => this.setState({confirmPassword: event.target.value})} type="password"/>
                                     </Form.Group>
 
                                     <Button> Sign Up </Button>
