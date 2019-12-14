@@ -17,11 +17,22 @@ services:
       context: ./client
       dockerfile: Dockerfile
     volumes:
-      - ./client:/app/src/client
+      - ./client/src:/app/src/client/src
       - /app/src/client/node_modules
     ports:
       - "3000:3000"
     container_name: client
     restart: unless-stopped
+    depends_on:
+      - server
+
+  mongo:
+    build:
+      context: ./mongo
+      dockerfile: Dockerfile
+    volumes:
+      - ./mongo/data/db:/data/db
+    ports:
+      - "27017:27017"
     depends_on:
       - server
