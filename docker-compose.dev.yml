@@ -36,3 +36,13 @@ services:
       - "27017:27017"
     depends_on:
       - server
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+      - client

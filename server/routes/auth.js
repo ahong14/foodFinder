@@ -32,7 +32,7 @@ router.post('/signup', (req, res) => {
         })
     }
 
-    User.findOne(({email: email}), (err, results) => {
+    User.findOne(({email: email}), (err, result) => {
         if(err){
             return res.status(500).json({
                 success: false,
@@ -40,7 +40,7 @@ router.post('/signup', (req, res) => {
             })
         }
 
-        if(results){
+        if(result){
             return res.status(400).json({
                 success: false,
                 message: "Email already exists"
@@ -113,6 +113,48 @@ router.post('/login', (req, res) => {
             message: "Please insert password"
         })
     }
+
+    User.findOne({email: email}, (err, result) => {
+        if(err){
+            return res.status(500).json({
+                success: false,
+                message: "Error with database"
+            })
+        }
+
+        if(result){
+            let hashedPassword = result.password;
+            bcrypt.compare(password, hashedPassword, (err, match) => {
+                if(err){
+                    return res.status(500).json({
+                        success: false,
+                        message: "Error with database"
+                    })
+                }
+
+                if(match === false){
+                    return res.status(400).json({
+                        success: false,
+                        message: "Invalid Password"
+                    })
+                }
+
+                else{
+                    return res.status(200).json({
+                        success: true,
+                        message: "Login Successful!"
+                    })
+                }
+            })
+        }
+
+        else{
+            return res.status(400).json({
+                success: false,
+                message: "Email does not exist"
+            })
+        }
+    })
 })
 
 
