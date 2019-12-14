@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import axios from 'axios';
 
 class Signup extends Component{
     constructor(props){
@@ -14,6 +15,21 @@ class Signup extends Component{
             password: "",
             confirmPassword: ""
         }
+    }
+
+    signupUser = () => {
+        axios.post('/api/auth/signup', {
+            params:{
+                email: this.state.email,
+                password: this.state.password
+            }
+        })
+        .then(res => {
+            alert(res.data.message);
+        })
+        .catch(err => {
+            alert(err.response.data.message);
+        })
     }
 
     render(){
@@ -40,7 +56,7 @@ class Signup extends Component{
                                         <Form.Control onChange={(event) => this.setState({confirmPassword: event.target.value})} type="password"/>
                                     </Form.Group>
 
-                                    <Button> Sign Up </Button>
+                                    <Button onClick={this.signupUser}> Sign Up </Button>
                                 </Form>
                             </div>
                         </Col>

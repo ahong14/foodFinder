@@ -6,6 +6,13 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 require('dotenv').config();
 
+//mongo connection
+const mongoose = require('mongoose');
+mongoose.connect("mongodb://mongo:27017/foodFinder", { useNewUrlParser: true} );
+mongoose.connection.on('error', function(error) {
+    console.error('Database connection error:', error);
+});
+
 //express setup
 const app = express();
 //parse body requests
