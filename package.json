@@ -5,9 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev-logs": "docker-compose -f docker-compose.dev.yml logs --follow" 
- },
+    "dev-logs": "docker-compose -f docker-compose.dev.yml logs --follow"
+  },
   "author": "",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "email-validator": "^2.0.4",
+    "validator": "^12.1.0"
+  }
 }

@@ -25,8 +25,10 @@ class Login extends Component{
                 }
             })
             .then(res => {
-                console.log(res);
-                alert(res.data.message);
+                if(res.data.success === true){
+                    console.log(res);
+                    alert(res.data.message);
+                }
             })
             .catch(err => {
                 console.log(err);
