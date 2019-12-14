@@ -6,6 +6,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import actions from '../../actions/actions';
 
 class Login extends Component{
     constructor(props){
@@ -28,6 +30,8 @@ class Login extends Component{
                 if(res.data.success === true){
                     console.log(res);
                     alert(res.data.message);
+                    this.props.updateLogin(this.state.email);
+                    this.props.history.push("/");
                 }
             })
             .catch(err => {
@@ -71,4 +75,22 @@ class Login extends Component{
     }
 }
 
-export default Login;
+const mapStateToProps = state => {
+    return{
+        login: state.loginReducer.login,
+        email: state.loginReducer.email
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        updateLogin: (email) => {
+            dispatch({
+                type: actions.LOGIN_SUCCESS,
+                email: email
+            })
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

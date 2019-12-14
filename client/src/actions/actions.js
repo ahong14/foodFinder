@@ -1,7 +1,7 @@
 const actions = {
     //AUTH
-    LOGIN_SUCCESS: true,
-    LOGOUT_SUCCESS: true
+    LOGIN_SUCCESS: "LOGIN_SUCCESS",
+    LOGOUT_SUCCESS: "LOGOUT_SUCCESS"
 }
 
 export default actions;
