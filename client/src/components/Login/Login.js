@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import actions from '../../actions/actions';
+import Cookies from 'js-cookie';
 
 class Login extends Component{
     constructor(props){
@@ -28,7 +29,9 @@ class Login extends Component{
             })
             .then(res => {
                 if(res.data.success === true){
-                    console.log(res);
+                    let token = res.data.token;
+                    Cookies.set('authToken', token);
+                    console.log(res.data);
                     alert(res.data.message);
                     this.props.updateLogin(this.state.email);
                     this.props.history.push("/");

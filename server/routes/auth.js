@@ -4,7 +4,9 @@ const User = require('../models/Users');
 const moment = require('moment-timezone');
 const bcrypt = require('bcryptjs');
 const saltRounds = 10;
+const jwt = require('jsonwebtoken');
 
+//signup user
 router.post('/signup', (req, res) => {
     var email = "";
     var password = "";
@@ -76,10 +78,11 @@ router.post('/signup', (req, res) => {
                                 message: "Error saving record"
                             })
                         }
+                        
                         return res.status(200).json({
                             success: true,
-                            message: "User created!"
-                        })
+                            message: "User created!",
+                        });
                     })
                 })
             });
@@ -87,6 +90,7 @@ router.post('/signup', (req, res) => {
     })
 })
 
+//login
 router.post('/login', (req, res) => {
     var email = "";
     var password = "";
@@ -140,9 +144,14 @@ router.post('/login', (req, res) => {
                 }
 
                 else{
+                    let token = jwt.sign({email: email}, process.env.JWT_SECRET, {
+                        expiresIn: 600
+                    });
+
                     return res.status(200).json({
                         success: true,
-                        message: "Login Successful!"
+                        message: "Login Successful!",
+                        token: token
                     })
                 }
             })
