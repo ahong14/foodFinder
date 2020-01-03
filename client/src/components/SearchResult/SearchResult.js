@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './SearchResult.scss';
 import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 import PropTypes from 'prop-types';
 
 class SearchResult extends Component{
@@ -41,26 +42,38 @@ class SearchResult extends Component{
 
     render(){
         return(
-            <Card>
-                <Card.Img variant="top" src={this.props.image} />
-                <Card.Body>
-                    <Card.Title> {this.props.businessName} </Card.Title>
-                    {this.props.phone ? <Card.Text> <span className="font-weight-bold"> Phone: </span>{this.props.phone}</Card.Text> : <span></span>}
-                    {this.props.address ? <Card.Text> <span className="font-weight-bold"> Address: </span> {this.props.address}</Card.Text> : <span></span>}
-                    <Card.Text>
-                        <span className="font-weight-bold"> Price: </span> {this.props.price}
-                    </Card.Text>
-                    <Card.Text>
-                        <span className="font-weight-bold"> Yelp Rating: </span> 
-                        {this.props.rating ? <img src={this.state.imgStarSrc} alt="Yelp Rating"/> : <span> None</span>}
-                    </Card.Text>
-                    <Card.Text>
-                        <a href={this.props.yelpURL} target="_blank"> Yelp Link </a>
-                    </Card.Text>
-                </Card.Body>
-            </Card>
+            <div classname="searchResultContainer">
+                <Card>
+                    <Card.Img variant="top" src={this.props.image} />
+                    <Card.Body>
+                        <Card.Title> {this.props.businessName} </Card.Title>
+                        <Card.Text> <span className="font-weight-bold"> Phone: </span>{this.props.phone} </Card.Text>
+                        <Card.Text> <span className="font-weight-bold"> Address: </span> {this.props.address} </Card.Text> 
+                        <Card.Text>
+                            <span className="font-weight-bold"> Price: </span> {this.props.price}
+                        </Card.Text>
+                        <Card.Text>
+                            <span className="font-weight-bold"> Yelp Rating: </span> 
+                            {this.props.rating ? <img src={this.state.imgStarSrc} alt="Yelp Rating"/> : <span> None</span>}
+                        </Card.Text>
+                        <Card.Text>
+                            <a href={this.props.yelpURL} target="_blank"> Yelp Link </a>
+                        </Card.Text>
+                        <Button variant="success"> Save to Collection </Button>
+                    </Card.Body>
+                </Card>
+            </div>
         );
     }
+}
+
+SearchResult.defaultProps = {
+    businessName: "Not Listed",
+    phone: "Not Listed",
+    address: "Not Listed",
+    price: "$",
+    rating: "1",
+    yelpURL: "Not Listed"
 }
 
 SearchResult.propTypes = {

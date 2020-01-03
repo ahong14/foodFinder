@@ -289,7 +289,7 @@ class SearchFood extends Component{
     render(){
         const results = this.state.searchResultsPaginated.map( result => {
             return(
-                <Col sm="4">
+                <Col md="4">
                     <SearchResult 
                         key={result.id} 
                         businessName={result.name} 
@@ -316,8 +316,8 @@ class SearchFood extends Component{
             )
         })
         return(
-            <div>
-                <Container>
+            <div className="searchFoodContainer">
+                <Container fluid>
                     <Row>
                         <Col>
                             <Jumbotron md="12"> 
@@ -382,7 +382,6 @@ class SearchFood extends Component{
                         <Row>
                             <SplitButton variant="secondary" title="Filter By" size="small">
                                 { dropdownItems }
-  
                             </SplitButton>
                         </Row>
                     </div>
