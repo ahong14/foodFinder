@@ -31,15 +31,14 @@ class Login extends Component{
                 if(res.data.success === true){
                     let token = res.data.token;
                     Cookies.set('authToken', token);
-                    console.log(res.data);
                     alert(res.data.message);
-                    this.props.updateLogin(this.state.email);
+                    this.props.updateLogin(this.state.email, res.data.items);
                     this.props.history.push("/");
                 }
             })
             .catch(err => {
                 console.log(err);
-                alert(err.response.data.message);
+                alert(err);
             })
         }
 
@@ -87,10 +86,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        updateLogin: (email) => {
+        updateLogin: (email, items) => {
             dispatch({
                 type: actions.LOGIN_SUCCESS,
-                email: email
+                email: email,
+                items: items
             })
         }
     }

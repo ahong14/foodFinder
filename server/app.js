@@ -29,11 +29,13 @@ app.use(express.static(path.join(__dirname, '/../client/build')));
 //route setup
 const search = require('./routes/search');
 const auth = require('./routes/auth');
+const items = require('./routes/items');
 const authMiddleware = require('./routes/authMiddleware');
 
 app.use('/api/auth', auth);
 app.use(authMiddleware);
 app.use('/api/search', search);
+app.use('/api/items', items);
 app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname + '/../client/build/index.html'))
 })

@@ -3,6 +3,9 @@ import './SearchResult.scss';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+import { connect } from 'react-redux';
+import actions from '../../actions/actions';
 
 class SearchResult extends Component{
     constructor(props){
@@ -10,6 +13,43 @@ class SearchResult extends Component{
         this.state = {
             imgStarSrc: ""
         }
+    }
+
+    //onclick function called when user saves to collection
+    //make api request, update user collection in database
+    saveItem = () => {
+        axios.post('/api/items/add', {
+            params: {
+                currentUser: this.props.email,
+                addItem: {
+                    businessName: this.props.businessName,
+                    image: this.props.image,
+                    phone: this.props.phone,
+                    address: this.props.address,
+                    price: this.props.price,
+                    imgStarSrc: this.state.imgStarSrc,
+                    yelpURL: this.props.yelpURL
+                }
+            }
+        })
+        .then(res => {
+            axios.get('/api/items', {
+                params:{
+                    currentUser: this.props.email
+                }
+            })
+            .then(res => {
+                //update added item to redux store
+                this.props.updateSavedItems(res.data.items);
+                alert("Saved item");
+            })
+            .catch(err => {
+                alert(err);
+            })
+        })
+        .catch(err => {
+            alert(err);
+        })
     }
 
     //when component load, dynamically create image source to render based on rating
@@ -59,7 +99,7 @@ class SearchResult extends Component{
                         <Card.Text>
                             <a href={this.props.yelpURL} target="_blank"> Yelp Link </a>
                         </Card.Text>
-                        <Button variant="success"> Save to Collection </Button>
+                        <Button onClick={this.saveItem} variant="success"> Save to Collection </Button>
                     </Card.Body>
                 </Card>
             </div>
@@ -85,4 +125,21 @@ SearchResult.propTypes = {
     yelpURL: PropTypes.string
 }
 
-export default SearchResult;
+const mapStateToProps = state => {
+    return{
+        email: state.loginReducer.email
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return{
+        updateSavedItems: (savedItems) => {
+            dispatch({
+                type: actions.UPDATE_SAVED_ITEMS,
+                items: savedItems
+            })
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchResult);

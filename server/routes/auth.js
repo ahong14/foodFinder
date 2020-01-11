@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 
 //signup user
 router.post('/signup', (req, res) => {
+    //extract email/password from request
     var email = "";
     var password = "";
     if(req.body.params){
@@ -34,6 +35,7 @@ router.post('/signup', (req, res) => {
         })
     }
 
+    //make query to mongo to find User models with matching email
     User.findOne(({email: email}), (err, result) => {
         if(err){
             return res.status(500).json({
@@ -42,6 +44,7 @@ router.post('/signup', (req, res) => {
             })
         }
 
+        //result was found, email exists
         if(result){
             return res.status(400).json({
                 success: false,
@@ -148,10 +151,14 @@ router.post('/login', (req, res) => {
                         expiresIn: 600
                     });
 
+                    let resultSavedItems = result.savedItems;
+                    let savedItems = [...resultSavedItems];
+
                     return res.status(200).json({
                         success: true,
                         message: "Login Successful!",
-                        token: token
+                        token: token,
+                        items: savedItems
                     })
                 }
             })

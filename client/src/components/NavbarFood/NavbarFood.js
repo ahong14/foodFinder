@@ -14,7 +14,7 @@ class NavbarFood extends Component{
     render(){
         return(
             this.props.login === false ?
-                <Navbar bg='light' fixed='top'>
+                <Navbar expand bg='light' fixed='top'>
                     <Navbar.Brand>
                         <Link to="/">
                             Food Finder
@@ -40,7 +40,7 @@ class NavbarFood extends Component{
 
             :
 
-                <Navbar bg='light' fixed='top'>
+                <Navbar expand bg='light' fixed='top'>
                     <Navbar.Brand>
                         <Link to="/">
                             Food Finder
@@ -51,6 +51,12 @@ class NavbarFood extends Component{
                         <Navbar.Text>
                             Welcome, <strong> {this.props.email} </strong>
                         </Navbar.Text>
+
+                        <Nav.Link>
+                            <Link to="/viewCollection">
+                                View Saved Collection
+                            </Link>
+                        </Nav.Link>
                         
                         <Nav.Link onClick={this.props.updateLogout}>
                             Logout
