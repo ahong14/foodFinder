@@ -13,13 +13,14 @@ class NavbarFood extends Component{
 
     render(){
         return(
-            <Navbar bg='light' fixed='top'>
-                <Navbar.Brand>
-                    <Link to="/">
-                        Food Finder
-                    </Link>
-                </Navbar.Brand>
-                {this.props.login === false ? 
+            this.props.login === false ?
+                <Navbar bg='light' fixed='top'>
+                    <Navbar.Brand>
+                        <Link to="/">
+                            Food Finder
+                        </Link>
+                    </Navbar.Brand>
+
                     <Navbar.Collapse className="justify-content-end">
                         <Nav>
                             <Nav.Link>
@@ -27,7 +28,7 @@ class NavbarFood extends Component{
                                     Sign Up
                                 </Link>
                             </Nav.Link>
-
+                
                             <Nav.Link>
                                 <Link to="/login"> 
                                     Sign In
@@ -35,7 +36,17 @@ class NavbarFood extends Component{
                             </Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
-                    :
+                </Navbar>
+
+            :
+
+                <Navbar bg='light' fixed='top'>
+                    <Navbar.Brand>
+                        <Link to="/">
+                            Food Finder
+                        </Link>
+                    </Navbar.Brand>
+
                     <Navbar.Collapse className="justify-content-end">
                         <Navbar.Text>
                             Welcome, <strong> {this.props.email} </strong>
@@ -45,9 +56,8 @@ class NavbarFood extends Component{
                             Logout
                         </Nav.Link>
                     </Navbar.Collapse>
-                }
-            </Navbar>
-        );
+                </Navbar>
+        )
     }
 }
 
