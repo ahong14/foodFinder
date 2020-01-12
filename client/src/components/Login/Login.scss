@@ -1,4 +1,10 @@
+@import "../../variables";
+
 .loginContainer{
     width: 40%;
     margin: auto;
+    padding: 5px;
+    border: $form-border;
+    border-radius: $form-border-radius;
+    height: 100%;
 }
