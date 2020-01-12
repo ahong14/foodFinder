@@ -4,8 +4,11 @@ const User = require('../models/Users');
 const moment = require('moment-timezone');
 const bcrypt = require('bcryptjs');
 const saltRounds = 10;
+const jwt = require('jsonwebtoken');
 
+//signup user
 router.post('/signup', (req, res) => {
+    //extract email/password from request
     var email = "";
     var password = "";
     if(req.body.params){
@@ -32,7 +35,8 @@ router.post('/signup', (req, res) => {
         })
     }
 
-    User.findOne(({email: email}), (err, results) => {
+    //make query to mongo to find User models with matching email
+    User.findOne(({email: email}), (err, result) => {
         if(err){
             return res.status(500).json({
                 success: false,
@@ -40,7 +44,8 @@ router.post('/signup', (req, res) => {
             })
         }
 
-        if(results){
+        //result was found, email exists
+        if(result){
             return res.status(400).json({
                 success: false,
                 message: "Email already exists"
@@ -76,10 +81,11 @@ router.post('/signup', (req, res) => {
                                 message: "Error saving record"
                             })
                         }
+                        
                         return res.status(200).json({
                             success: true,
-                            message: "User created!"
-                        })
+                            message: "User created!",
+                        });
                     })
                 })
             });
@@ -87,6 +93,7 @@ router.post('/signup', (req, res) => {
     })
 })
 
+//login
 router.post('/login', (req, res) => {
     var email = "";
     var password = "";
@@ -113,6 +120,57 @@ router.post('/login', (req, res) => {
             message: "Please insert password"
         })
     }
+
+    User.findOne({email: email}, (err, result) => {
+        if(err){
+            return res.status(500).json({
+                success: false,
+                message: "Error with database"
+            })
+        }
+
+        if(result){
+            let hashedPassword = result.password;
+            bcrypt.compare(password, hashedPassword, (err, match) => {
+                if(err){
+                    return res.status(500).json({
+                        success: false,
+                        message: "Error with database"
+                    })
+                }
+
+                if(match === false){
+                    return res.status(400).json({
+                        success: false,
+                        message: "Invalid Password"
+                    })
+                }
+
+                else{
+                    let token = jwt.sign({email: email}, process.env.JWT_SECRET, {
+                        expiresIn: 60000
+                    });
+
+                    let resultSavedItems = result.savedItems;
+                    let savedItems = [...resultSavedItems];
+
+                    return res.status(200).json({
+                        success: true,
+                        message: "Login Successful!",
+                        token: token,
+                        items: savedItems
+                    })
+                }
+            })
+        }
+
+        else{
+            return res.status(400).json({
+                success: false,
+                message: "Email does not exist"
+            })
+        }
+    })
 })
 
 

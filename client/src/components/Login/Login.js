@@ -6,6 +6,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import actions from '../../actions/actions';
+import Cookies from 'js-cookie';
 
 class Login extends Component{
     constructor(props){
@@ -16,6 +19,7 @@ class Login extends Component{
         }
     }
 
+    //function to submit login information
     loginUser = () => {
         if(this.state.email && this.state.password){
             axios.post('/api/auth/login', {
@@ -25,15 +29,29 @@ class Login extends Component{
                 }
             })
             .then(res => {
-                console.log(res);
+                if(res.data.success === true){
+                    let token = res.data.token;
+                    Cookies.set('authToken', token);
+                    alert(res.data.message);
+                    this.props.updateLogin(this.state.email, res.data.items);
+                    this.props.history.push("/");
+                }
             })
             .catch(err => {
                 console.log(err);
+                alert(err);
             })
         }
 
         else{
             alert("Please enter email/password");
+        }
+    }
+
+    //function to handle on key press, check for enter key
+    submitOnEnter = (event) => {
+        if(event.key === 'Enter'){
+            this.loginUser();
         }
     }
 
@@ -45,7 +63,7 @@ class Login extends Component{
                         <Col>
                             <div className="loginContainer">
                                 <h5> Sign In </h5>
-                                <Form>
+                                <Form onKeyPress={this.submitOnEnter}>
                                     <Form.Group>
                                         <Form.Label> Email </Form.Label>
                                         <Form.Control onChange = {(event) => this.setState({email: event.target.value})} type="email"/>
@@ -67,4 +85,23 @@ class Login extends Component{
     }
 }
 
-export default Login;
+const mapStateToProps = state => {
+    return{
+        login: state.loginReducer.login,
+        email: state.loginReducer.email
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        updateLogin: (email, items) => {
+            dispatch({
+                type: actions.LOGIN_SUCCESS,
+                email: email,
+                items: items
+            })
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

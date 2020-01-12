@@ -1,6 +1,15 @@
-version: "3"
+version: "3.7"
 
 services:
+  mongo:
+    build:
+      context: ./mongo
+      dockerfile: Dockerfile
+    volumes:
+      - ./mongo/data/db:/data/db
+    ports:
+      - "27017:27017"
+
   server:
     build:
       context: ./server
@@ -11,6 +20,8 @@ services:
       - "4000:4000"
     container_name: server
     restart: unless-stopped
+    depends_on:
+      - mongo
 
   client:
     build:
@@ -26,13 +37,12 @@ services:
     depends_on:
       - server
 
-  mongo:
+  nginx:
     build:
-      context: ./mongo
+      context: ./nginx
       dockerfile: Dockerfile
-    volumes:
-      - ./mongo/data/db:/data/db
     ports:
-      - "27017:27017"
+      - "80:80"
     depends_on:
       - server
+      - client

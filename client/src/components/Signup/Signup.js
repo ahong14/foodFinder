@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import validator from 'validator';
 
 class Signup extends Component{
     constructor(props){
@@ -18,18 +19,32 @@ class Signup extends Component{
     }
 
     signupUser = () => {
-        axios.post('/api/auth/signup', {
-            params:{
-                email: this.state.email,
-                password: this.state.password
-            }
-        })
-        .then(res => {
-            alert(res.data.message);
-        })
-        .catch(err => {
-            alert(err.response.data.message);
-        })
+        if(validator.isEmail(this.state.email) === true && validator.isLength(this.state.password, {min: 7, max: 20}) === true){
+            axios.post('/api/auth/signup', {
+                params:{
+                    email: this.state.email,
+                    password: this.state.password
+                }
+            })
+            .then(res => {
+                alert(res.data.message);
+            })
+            .catch(err => {
+                alert(err.response.data.message);
+            })
+        }
+
+        else if(validator.isEmail(this.state.email) === false){
+            alert("Please insert valid email");
+        }
+
+        else if(this.state.password !== this.state.confirmPassword){
+            alert("Password comparisons do not match");
+        }
+
+        else if(validator.isLength(this.state.password, {min: 7, max: 20}) === false){
+            alert("Password length invalid")
+        }
     }
 
     render(){
