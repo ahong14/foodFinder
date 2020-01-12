@@ -1,0 +1,42 @@
+
+.card{
+    height: 650px;
+    width: 370px;
+    max-width: 500px;
+    max-height: 1000px;
+    padding: 10px;
+    padding-top: 10px;
+}
+
+.card-img-top{
+    height: 50%;
+    width: 95%;
+}
+
+@media screen and (min-width: 800px) and (max-width: 1400px){
+    .card{
+        height: 600px;
+        width: 400px;
+        max-width: 500px;
+        max-height: 1000px;
+        padding: 10px;
+        padding-top: 10px;
+    }
+}
+
+@media screen and (min-width: 1500px){
+    .card{
+        height: 700px;
+        width: 800px;
+        max-width: 500px;
+        max-height: 1000px;
+        padding: 10px;
+        padding-top: 10px;
+    }
+    
+    .card-img-top{
+        height: 50%;
+        width: 95%;
+    }
+
+}

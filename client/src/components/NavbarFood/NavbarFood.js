@@ -2,13 +2,18 @@ import React, { Component } from 'react';
 import './NavbarFood.scss';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import actions from '../../actions/actions';
 
 class NavbarFood extends Component{
     constructor(props){
         super(props);
+    }
+
+    handleLogout = () => {
+        this.props.updateLogout();
+        this.props.history.push('/login')
     }
 
     render(){
@@ -58,7 +63,7 @@ class NavbarFood extends Component{
                             </Link>
                         </Nav.Link>
                         
-                        <Nav.Link onClick={this.props.updateLogout}>
+                        <Nav.Link onClick={this.handleLogout}>
                             Logout
                         </Nav.Link>
                     </Navbar.Collapse>
@@ -79,9 +84,9 @@ const mapDispatchToProps = dispatch => {
         updateLogout: () => {
             dispatch({
                 type: actions.LOGOUT_SUCCESS
-            })
+            });
         }
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NavbarFood);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavbarFood));

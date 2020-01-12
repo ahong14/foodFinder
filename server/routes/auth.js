@@ -148,7 +148,7 @@ router.post('/login', (req, res) => {
 
                 else{
                     let token = jwt.sign({email: email}, process.env.JWT_SECRET, {
-                        expiresIn: 600
+                        expiresIn: 60000
                     });
 
                     let resultSavedItems = result.savedItems;

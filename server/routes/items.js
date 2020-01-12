@@ -14,6 +14,7 @@ router.get('/', (req, res) => {
         currentUser = req.query.currentUser;
     }
 
+    //search based on current logged in user
     User.find({email: currentUser}, (err, result) => {
         if(err){
             console.log(err);
@@ -23,6 +24,7 @@ router.get('/', (req, res) => {
             })
         }
 
+        //result returned as array with one entry, extract single entry
         let returnResult = result[0];
 
         return res.status(200).json({
@@ -46,7 +48,9 @@ router.post('/add', (req, res) => {
         currentUser = req.body.currentUser;
         addItem = req.body.addItem;
     }
-    console.log("current user: ", currentUser);
+    
+    //search based on current logged in user
+    //findOne returns one object entry
     User.findOne({email: currentUser}, (err, result) => {
         if(err){
             console.log(err);
@@ -60,6 +64,7 @@ router.post('/add', (req, res) => {
         //TODO check for duplicates
         updatedItems.push(addItem);
         
+        //find record with matching email and update results
         User.findOneAndUpdate({email: currentUser}, {
             savedItems: [...updatedItems]
         }, (err, updatedResult) => {
@@ -81,7 +86,63 @@ router.post('/add', (req, res) => {
 
 //remove item from collection
 router.delete('/remove', (req, res) => {
+    var removeItemName;
+    var currentUser;
 
+    if(req.query.params){
+        removeItemName = req.query.params.removeItemName;
+        currentUser = req.query.params.currentUser;
+    }
+
+    else if(req.query){
+        removeItemName = req.query.removeItemName;
+        currentUser = req.query.currentUser;
+    }
+
+    if(removeItemName === undefined || currentUser === undefined){
+        return res.status(400).json({
+            success: false,
+            message: "Invalid item or user"
+        })
+    }
+
+    //search based on current logged in user
+    User.find({email: currentUser}, (err, result) => {
+        if(err){
+            console.log(err);
+            return res.status(500).json({
+                success: false,
+                message: "Error with database"
+            })
+        }
+
+        //results returned as array, extract first item
+        let updateSavedItems = result[0];
+        //spread saved items
+        updateSavedItems = [...updateSavedItems.savedItems];
+        //create filtered version of savedItems, removing target deleted item
+        updateSavedItems = updateSavedItems.filter(item => {
+            return item.businessName !== removeItemName;
+        });
+
+        //update database collection of removed item
+        User.findOneAndUpdate({email: currentUser}, {
+            savedItems: [...updateSavedItems]
+        }, (err, updatedResult) => {
+            if(err){
+                console.log(err);
+                return res.status(500).json({
+                    success: false,
+                    message: "Error with database"
+                })
+            }
+            return res.status(200).json({
+                success: true,
+                message: "Item removed from saved collection.",
+                items: updateSavedItems
+            })
+        })
+    })
 })
 
 module.exports = router;

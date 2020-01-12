@@ -19,6 +19,7 @@ class Login extends Component{
         }
     }
 
+    //function to submit login information
     loginUser = () => {
         if(this.state.email && this.state.password){
             axios.post('/api/auth/login', {
@@ -47,6 +48,13 @@ class Login extends Component{
         }
     }
 
+    //function to handle on key press, check for enter key
+    submitOnEnter = (event) => {
+        if(event.key === 'Enter'){
+            this.loginUser();
+        }
+    }
+
     render(){
         return(
             <div>
@@ -55,7 +63,7 @@ class Login extends Component{
                         <Col>
                             <div className="loginContainer">
                                 <h5> Sign In </h5>
-                                <Form>
+                                <Form onKeyPress={this.submitOnEnter}>
                                     <Form.Group>
                                         <Form.Label> Email </Form.Label>
                                         <Form.Control onChange = {(event) => this.setState({email: event.target.value})} type="email"/>

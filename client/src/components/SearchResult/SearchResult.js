@@ -99,7 +99,11 @@ class SearchResult extends Component{
                         <Card.Text>
                             <a href={this.props.yelpURL} target="_blank"> Yelp Link </a>
                         </Card.Text>
-                        <Button onClick={this.saveItem} variant="success"> Save to Collection </Button>
+                        {
+                            this.props.login ? <Button onClick={this.saveItem} variant="success"> Save to Collection </Button>
+                            :
+                            <Button disabled> Save to Collection </Button>
+                        }
                     </Card.Body>
                 </Card>
             </div>
@@ -127,7 +131,8 @@ SearchResult.propTypes = {
 
 const mapStateToProps = state => {
     return{
-        email: state.loginReducer.email
+        email: state.loginReducer.email,
+        login: state.loginReducer.login
     }
 }
 
