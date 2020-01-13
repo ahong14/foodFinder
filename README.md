@@ -10,6 +10,8 @@
 
  Frontend: React, Redux, Bootstrap
 
+ Banner Image Source: https://www.pexels.com/photo/variety-of-cooked-dishes-374052/
+
  Backend: Node/Express, MongoDB
 
  DevOps: Nginx, Docker, Docker-Compose

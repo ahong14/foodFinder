@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Form from 'react-bootstrap/Form';
+import Image from 'react-bootstrap/Image';
 import Spinner from 'react-bootstrap/Spinner';
 import { FaSearch } from 'react-icons/fa';
 import { MdMyLocation } from 'react-icons/md';
@@ -15,8 +16,6 @@ import SearchResult from '../SearchResult/SearchResult';
 import Pagination from 'react-js-pagination';
 import Dropdown from 'react-bootstrap/Dropdown';
 import SplitButton from 'react-bootstrap/SplitButton';
-import * as Scroll from 'react-scroll';
-
 
 class SearchFood extends Component{
     constructor(props){
@@ -80,7 +79,8 @@ class SearchFood extends Component{
             let filterValues = [...this.state.searchResults];
             let filterNoPrice = [];
             let filterWithPrice = [];
-            console.log(filterValues);
+
+            //determine which filter was selected
             switch(this.state.selectedFilter){
                 //price low to high
                 case 1:
@@ -197,7 +197,7 @@ class SearchFood extends Component{
 
     //make request to api based on search queries
     sendQuery = () => {
-        if(this.state.searchQuery !== ""){
+        if(this.state.searchQuery !== "" && this.state.locationQuery !== ""){
             this.setState({
                 spinnerVisible: "visible"
             });
@@ -210,6 +210,7 @@ class SearchFood extends Component{
                 searchParams.latitude = this.state.currentLocation.latitude;
                 searchParams.longitude = this.state.currentLocation.longitude;
             }
+
             //else use location search query
             else{
                 searchParams.term = this.state.searchQuery;
@@ -254,8 +255,19 @@ class SearchFood extends Component{
             })
         }
 
+        //error handling for empty search params
         else{
-            alert("Please input search");
+            if(this.state.searchQuery === ""){
+                alert("Please input search");
+            }
+
+            else if(this.state.locationQuery === ""){
+                alert("Please input location");
+            }
+
+            else{
+                alert("Please input search and location");
+            }
         }
     }
 
@@ -319,14 +331,24 @@ class SearchFood extends Component{
             <div className="searchFoodContainer">
                 <Container fluid>
                     <Row>
-                        <Col>
+                        <Col md="12">
                             <Jumbotron md="12"> 
                                 <div className="jumbotronContainer">
                                     <h1>
                                         Food Finder
                                     </h1>
-                                    <p> Search for your favorite restaurants and businesses. </p>
+                                    <p> Search for your favorite restaurants and businesses using Yelp. </p>
                                 </div>
+
+                                <Row>
+                                    <div id="foodSearchImageContainer">
+                                        <Image
+                                            width={1350}
+                                            height={340}
+                                            src="/variety-of-cooked-dishes-374052.jpg"                         
+                                        />
+                                    </div>
+                                </Row>
                             </Jumbotron>
                         </Col>               
                     </Row>
