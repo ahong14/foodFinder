@@ -12,6 +12,7 @@ class CollectionResult extends Component{
         super(props);
     }
 
+    //remove item from user's collection
     removeItem = () => {
         axios.delete('/api/items/remove', {
             params:{

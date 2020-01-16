@@ -9,6 +9,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import actions from '../../actions/actions';
 import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
 
 class Login extends Component{
     constructor(props){
@@ -67,6 +68,7 @@ class Login extends Component{
                                     <Form.Group>
                                         <Form.Label> Email </Form.Label>
                                         <Form.Control onChange = {(event) => this.setState({email: event.target.value})} type="email"/>
+                                        <Link to="/signup"> Don't have an account? Sign Up </Link>
                                     </Form.Group>
 
                                     <Form.Group>

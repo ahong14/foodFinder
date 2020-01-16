@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import actions from '../../actions/actions';
+import Tooltip from '../Tooltip/Tooltip';
 
 class SearchResult extends Component{
     constructor(props){
@@ -82,7 +83,7 @@ class SearchResult extends Component{
 
     render(){
         return(
-            <div classname="searchResultContainer">
+            <div className="searchResultContainer">
                 <Card>
                     <Card.Img variant="top" src={this.props.image} />
                     <Card.Body>
@@ -100,17 +101,28 @@ class SearchResult extends Component{
                             <a href={this.props.yelpURL} target="_blank"> Yelp Link </a>
                         </Card.Text>
                         {
-                            this.props.login ? <Button onClick={this.saveItem} variant="success"> Save to Collection </Button>
+                            this.props.login === true ? <Button onClick={this.saveItem} variant="success"> Save to Collection </Button>
                             :
-                            <Button disabled> Save to Collection </Button>
+                            <Tooltip 
+                                placement="top" 
+                                trigger="hover" 
+                                tooltip="Please login to save."
+                                delayHide={100}
+                            >
+                                <Button disabled> 
+                                    Save to Collection 
+                                </Button>
+                            </Tooltip>
                         }
                     </Card.Body>
+                    
                 </Card>
             </div>
         );
     }
 }
 
+//default props
 SearchResult.defaultProps = {
     businessName: "Not Listed",
     phone: "Not Listed",
@@ -120,6 +132,7 @@ SearchResult.defaultProps = {
     yelpURL: "Not Listed"
 }
 
+//prop types check
 SearchResult.propTypes = {
     businessName: PropTypes.string.isRequired,
     phone: PropTypes.string,

@@ -2,6 +2,7 @@
 
 .jumbotronContainer{
     width: 100%;
+    margin-top: -65px;
 }
 
 .currentLocationContainer{
@@ -52,6 +53,11 @@
 
 .filterResultsContainer{
     padding: 20px;
+}
+
+#foodSearchImageContainer{
+    width:100%;
+    height: 10%;
 }
 
 @media screen and (min-width: 800px) and (max-width: 1440px){        

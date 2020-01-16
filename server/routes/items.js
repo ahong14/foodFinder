@@ -136,6 +136,7 @@ router.delete('/remove', (req, res) => {
                     message: "Error with database"
                 })
             }
+            
             return res.status(200).json({
                 success: true,
                 message: "Item removed from saved collection.",
