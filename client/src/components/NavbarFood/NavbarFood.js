@@ -16,6 +16,7 @@ class NavbarFood extends Component{
         this.props.history.push('/login')
     }
 
+    //render navbar based on login property
     render(){
         return(
             this.props.login === false ?

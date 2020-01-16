@@ -343,8 +343,8 @@ class SearchFood extends Component{
                                 <Row>
                                     <div id="foodSearchImageContainer">
                                         <Image
-                                            width={1350}
-                                            height={340}
+                                            width={1320}
+                                            height={360}
                                             src="/variety-of-cooked-dishes-374052.jpg"                         
                                         />
                                     </div>

@@ -9,7 +9,7 @@ require('dotenv').config();
 //mongo connection
 const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGO_URI_LOCAL, { useNewUrlParser: true} );
-mongoose.connection.on('error', function(error) {
+mongoose.connection.on('error', (error) => {
     console.error('Database connection error:', error);
 });
 
@@ -40,7 +40,7 @@ app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname + '/../client/build/index.html'))
 })
 
-const PORT = 4000;
+const PORT = 5000;
 app.listen(process.env.PORT || PORT, () => {
     console.log("Started on port: ", process.env.PORT);
 })

@@ -53,14 +53,6 @@ class SearchResult extends Component{
         })
     }
 
-    showToolTip = () => {
-        return(
-            <Tooltip>
-                Please login to save to collection.
-            </Tooltip>
-        )
-    }
-
     //when component load, dynamically create image source to render based on rating
     componentDidMount(){
         if(this.props.rating){
@@ -130,6 +122,7 @@ class SearchResult extends Component{
     }
 }
 
+//default props
 SearchResult.defaultProps = {
     businessName: "Not Listed",
     phone: "Not Listed",
@@ -139,6 +132,7 @@ SearchResult.defaultProps = {
     yelpURL: "Not Listed"
 }
 
+//prop types check
 SearchResult.propTypes = {
     businessName: PropTypes.string.isRequired,
     phone: PropTypes.string,

@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 
 services:
   #nodejs app serving react application
@@ -7,20 +7,23 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "4000:4000"
+      - "5000:5000"
     volumes:
       - ./client:/app/src/client
       - /app/src/client/node_modules
-    container_name: server
-    restart: unless-stopped
+    container_name: foodFinder_server
+    restart: always
 
   #nginx web server
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-    container_name: nginx
-    restart: unless-stopped
+  # nginx:
+  #   build:
+  #     context: ./nginx
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   container_name: foodFinder_nginx
+  #   restart: always
+  #   depends_on:
+  #     - server
   
