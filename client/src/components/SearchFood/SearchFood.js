@@ -197,7 +197,7 @@ class SearchFood extends Component{
 
     //make request to api based on search queries
     sendQuery = () => {
-        if(this.state.searchQuery !== "" && this.state.locationQuery !== ""){
+        if(this.state.searchQuery !== "" && (this.state.locationQuery !== "" || this.state.currentLocationEnabled === true)){
             this.setState({
                 spinnerVisible: "visible"
             });
@@ -261,7 +261,7 @@ class SearchFood extends Component{
                 alert("Please input search");
             }
 
-            else if(this.state.locationQuery === ""){
+            else if(this.state.locationQuery === "" && this.state.currentLocationEnabled === false){
                 alert("Please input location");
             }
 
@@ -343,7 +343,7 @@ class SearchFood extends Component{
                                 <Row>
                                     <div id="foodSearchImageContainer">
                                         <Image
-                                            width={1320}
+                                            width={1000}
                                             height={360}
                                             src="/variety-of-cooked-dishes-374052.jpg"                         
                                         />
