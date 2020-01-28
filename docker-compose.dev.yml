@@ -17,7 +17,7 @@ services:
     volumes: 
       - ./server:/app/src/server
     ports:
-      - "4000:4000"
+      - "5000:5000"
     container_name: server
     restart: unless-stopped
     depends_on:

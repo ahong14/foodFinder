@@ -40,7 +40,7 @@ class SavedCollection extends Component{
                             </h1>
                         </Col>
                     </Row>
-
+{/* 
                     <Row>
                         <Col sm="2">
                             <Form>
@@ -50,7 +50,7 @@ class SavedCollection extends Component{
                                 />
                             </Form>
                         </Col>
-                    </Row>
+                    </Row> */}
 
                     <div className="savedResultsContainer">
                         <Row>

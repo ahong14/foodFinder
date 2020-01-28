@@ -8,6 +8,6 @@ RUN npm install
 
 RUN npm install nodemon -g
 
-EXPOSE 4000
+EXPOSE 5000
 
 CMD [ "nodemon", "app.js" ]
